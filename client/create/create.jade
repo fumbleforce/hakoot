@@ -1,0 +1,7 @@
+template(name="create")
+    .ui.container.create
+        h1.ui.dividing.header(style="color:white")
+            | Create new quiz
+        
+        .ui.segment
+            +quickForm(collection="Game" id="gameForm" type="insert")
