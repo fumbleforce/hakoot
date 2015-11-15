@@ -1,9 +1,20 @@
 Template.game.onCreated(function () {
     this.gamePin = Session.get("gamePin");
-    this.subscribe("game", this.gamePin);
-    this.subscribe("player", {
+    let gameSub = Meteor.subscribe("game", this.gamePin);
+    
+    let playerSub = Meteor.subscribe("player", {
         gamePin: this.gamePin,
         nickname: Session.get("nickname")
+    });
+    
+    Session.set("gameLoaded", false);
+    Session.set("playerLoaded", false);
+    console.log(gameSub, playerSub);
+    
+    this.autorun(() => {
+        console.log(gameSub.ready());
+        Session.set("gameLoaded", gameSub.ready());
+        Session.set("playerLoaded", playerSub.ready());
     });
 });
 
@@ -13,13 +24,15 @@ Template.game.onRendered(function () {
 
 Template.game.helpers({
     active() {
-        let game = Game.findOne(Template.instance().gamePin);
+        if (!Session.get("gameLoaded")) return;
+        let game = Game.findOne({ gamePin: Session.get("gamePin") });
         if (game) {
             return game.active;
         }
     },
     result() {
-        let game = Game.findOne(Template.instance().gamePin);
+        if (!Session.get("gameLoaded")) return;
+        let game = Game.findOne({ gamePin: Session.get("gamePin") });
         if (game) {
             return !game.active && game.current > 0;
         }
@@ -28,16 +41,10 @@ Template.game.helpers({
 });
 
 
-Template.activeGame.onCreated(function () {
-
-});
-
-Template.activeGame.onRendered(function () {
-
-});
-
 Template.activeGame.helpers({
     hasChosen() {
+        if (!Session.get("playerLoaded")) return;
+        
         let player = Player.findOne({
             nickname: Session.get("nickname"),
             gamePin: Session.get("gamePin")
@@ -49,6 +56,8 @@ Template.activeGame.helpers({
     },
     
     answer() {
+        if (!Session.get("playerLoaded")) return;
+        
         let player = Player.findOne({
             nickname: Session.get("nickname"),
             gamePin: Session.get("gamePin")
@@ -57,6 +66,41 @@ Template.activeGame.helpers({
         if (player) {
             return player.answer;
         }
+    },
+    
+    timeout() {
+        let game = Game.findOne({ gamePin: Session.get("gamePin") });
+        return game && game.timeout;
+    },
+    
+    correct() {
+        let game = Game.findOne({ gamePin: Session.get("gamePin") });
+        let player = Player.findOne({
+            nickname: Session.get("nickname"),
+            gamePin: Session.get("gamePin")
+        });
+        if (player.answer == undefined) return false;
+        let alternatives = game.questions[game.current].alternatives;
+        return alternatives[player.answer].correct;
+    },
+    
+    
+    alternatives() {
+        if (!Session.get("gameLoaded")) return;
+        
+        let game = Game.findOne({ gamePin: Session.get("gamePin") });
+        if (game) {
+            return game.questions[game.current].alternatives;
+        }
+    },
+    
+    getIcon(i) {
+        return [
+            "circle",
+            "asterisk",
+            "square",
+            "remove"
+        ][i];
     },
     
     alternativeClass(i) {
@@ -72,6 +116,7 @@ Template.activeGame.helpers({
 Template.activeGame.events({
     "click [choose]"(e) {
         var answer = e.currentTarget.getAttribute("choose");
+        console.log(answer);
         Meteor.call("answer", {
             gamePin: Session.get("gamePin"),
             nickname: Session.get("nickname"),
@@ -84,11 +129,14 @@ Template.activeGame.events({
 
 Template.result.helpers({
     correct() {
+        if (!Session.get("playerLoaded")) return;
+        if (!Session.get("gameLoaded")) return;
+        
         let player = Player.findOne({
             nickname: Session.get("nickname"),
             gamePin: Session.get("gamePin")
         });
-        let game = Game.findOne(Session.get("gamePin"));
+        let game = Game.findOne({ gamePin: Session.get("gamePin") });
         
         if (player && game) {
             return game.questions[game.current].alternatives[player.answer].correct;

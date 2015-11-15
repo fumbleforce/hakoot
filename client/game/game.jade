@@ -10,15 +10,30 @@ template(name="game")
 
 template(name="activeGame")
     
-    if hasChosen
-        .vertical-wrapper
-            h1.ui.center.aligned.header.vertical-center(style="color:white!important")
-                | You chose #{answer}
+    if timeout
+        if correct
+            .vertical-wrapper
+                h1.ui.center.aligned.header.vertical-center(style="color:white!important")
+                    | You were correct!
+        else
+            .vertical-wrapper
+                h1.ui.center.aligned.header.vertical-center(style="color:white!important")
+                    | You were wrong!
     else
-        .ui.two.column.grid
-            each addIndex alternatives
-                .column
-                    .ui.inverted.center.aligned.segment(choose=index class="{{alternativeClass index}}")=value
+        .ui.hidden.divider
+        
+        if hasChosen
+            .vertical-wrapper
+                h1.ui.center.aligned.header.vertical-center(style="color:white!important")
+                    | You chose #{answer}
+            
+        else
+            .ui.two.column.grid.container
+                each addIndex alternatives
+                    .column
+                        .ui.inverted.center.aligned.segment(choose=index class="{{alternativeClass index}}" style="font-size: 3rem;")
+                            i.icon(class="{{getIcon index}}")
+                            | #{value.text}
 
 
 

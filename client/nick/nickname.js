@@ -22,7 +22,7 @@ Template.nickname.events({
                 return;
             }
             
-            Session.set("nickname", res);
+            Session.setPersistent("nickname", res);
             FlowRouter.go("/game");
         });
     },

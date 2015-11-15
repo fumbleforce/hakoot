@@ -26,7 +26,7 @@ Template.join.events({
                 return;
             }
             console.log(err, res);
-            Session.set("gamePin", res);
+            Session.setPersistent("gamePin", res);
             FlowRouter.go("/nickname");
         });
     },

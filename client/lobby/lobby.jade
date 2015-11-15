@@ -1,1 +1,48 @@
 template(name="lobby")
+    
+    .ui.inverted.teal.basic.segment.pin-container
+        .ui.container
+            .ui.two.column.grid
+                .column
+                    .ui.compact.segment
+                        | Join at hakoot.meteor.com
+                    
+                    .ui.compact.segments
+                        .ui.top.attached.segment
+                            | With game-pin:
+                        .ui.segment
+                            h1.ui.header(style="font-size:6rem")=gamePin
+                .column
+                    .ui.segments
+                        .ui.top.attached.tertiary.segment(style="padding:3px !important")
+                            .ui.segment(style="padding:3px !important") hakoot.meteor.com
+                        
+                        .ui.green.inverted.segment.center.aligned
+                            .logo(style="font-size:3em!important;padding-top:20px") Hakoot!
+                            .ui.center.aligned.segment
+                                | Game pin
+                            .ui.small.fluid.purple.button Enter
+                        
+    .ui.hidden.divider
+    
+    .ui.basic.segment.players
+        .ui.three.columns.grid
+            .column
+                .ui.left.floated.compact.segment.player-count(style="margin:0;")=playerCount
+                .ui.left.floated.compact.segment(style="margin:0;") Players
+            
+            .column.ui.center.aligned(style="padding-top:30px")
+                .logo(style="font-size:5em!important;") Hakoot!
+            
+            .column
+                .ui.right.icon.huge.purple.right.floated.button.start
+                    | Start now
+                    i.right.chevron.icon
+        
+        .ui.basic.four.column.grid.segment
+            each players
+                +player
+
+
+template(name="player")
+    .column(style="color:white")=nickname

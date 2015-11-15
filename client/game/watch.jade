@@ -1,31 +1,54 @@
 template(name="watch")
     
-    .ui.inverted.teal.basic.segment.pin-container
-        .ui.container
-            .ui.two.column.grid
-                .column
-                    .ui.compact.segment
-                        | Join at hakoot.meteor.com
-                    
-                    .ui.compact.segments
-                        .ui.top.attached.segment
-                            | With game-pin:
-                        .ui.segment
-                            h1.ui.header(style="font-size:6rem")=gamePin
-                .column
-                    .ui.segments
-                        .ui.top.attached.tertiary.segment(style="padding:3px !important")
-                            .ui.segment(style="padding:3px !important") hakoot.meteor.com
-                        
-                        .ui.green.inverted.segment.center.aligned
-                            .logo(style="font-size:3em!important;padding-top:20px") Hakoot!
-                            .ui.center.aligned.segment
-                                | Game pin
-                            .ui.small.fluid.purple.button Enter
-                        
-    .ui.hidden.divider
+    if started
+        if active
+            +question
+        else
+            +score
+    else
+        +lobby
     
-    .ui.basic.segment.players
+
+
+template(name="question")
+    
+    .ui.center.aligned.segment
+        span(style="font-weight: bolder; color: orange") Q#{current}
+        | #{question}
+        
+        if timeout
+            .ui.right.floated.purple.icon.button.scores
+                | Scores
+                i.right.chevron.icon
+    
+    if timeout
+        .ui.container
+            .ui.segments
+                #answers.ui.segment(style="height: 22rem")
+                    each addIndex alternatives
+                        .pillar(style="{{pillar index}}")
+                            
+    else
+        .ui.three.column.grid.basic.center.aligned.segment
+            .column
+                .ui.compact.inverted.orange.circular.segment
+                    | {{getCountdown}}
+            .column
+                | pic
+            .column
+                .ui.compact.segment.right.floated
+                    | #{answerCount} Answers
+    
+    .ui.two.column.grid.basic.segment
+        each addIndex alternatives
+            .column
+                .ui.inverted.center.aligned.segment(choose=index class="{{alternativeClass index}}" style="font-size: 3rem;")
+                    i.icon(class="{{getIcon index}}")
+                    | #{value.text}
+
+template(name="score")
+    .ui.hidden.divider
+    .ui.container(style="margin-top:3rem!important")
         .ui.three.columns.grid
             .column
                 .ui.left.floated.compact.segment.player-count(style="margin:0;")=playerCount
@@ -35,14 +58,19 @@ template(name="watch")
                 .logo(style="font-size:5em!important;") Hakoot!
             
             .column
-                .ui.right.icon.huge.purple.right.floated.button.start
-                    | Start now
-                    i.right.chevron.icon
+                if canGoNext
+                    .ui.right.icon.huge.purple.right.floated.button.next
+                        | Next question
+                        i.right.chevron.icon
         
-        .ui.basic.four.column.grid.segment
-            each players
-                +player
+        table.ui.brown.inverted.table
+            thead
+                tr
+                    th Player
+                    th Points
+            tbody
+                each rankedPlayers
+                    tr
+                        td=nickname
+                        td=points            
                 
-template(name="player")
-    
-    .column(style="color:white")=nickname

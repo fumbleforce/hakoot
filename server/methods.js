@@ -35,13 +35,16 @@ Meteor.methods({
         let gamePin = opts.gamePin;
         let nickname = opts.nickname;
         let answer = +opts.answer;
+        let game = Game.findOne({ gamePin });
+        let timeleft = moment.utc(game.deadline).diff(moment.utc(), "seconds");
         
         Player.update({
             gamePin,
-            nickname    
+            nickname   
         }, {
             $set: {
                 answer,
+                timeleft
             }
         });
     },
@@ -58,11 +61,73 @@ Meteor.methods({
     "start"(gamePin) {
         console.log("Starting", gamePin);
         
+        Player.update({ gamePin }, {
+            $unset: { answer: 1, timeleft: 1 }
+        });
+
         Game.update({ gamePin }, {
             $set: {
+                timeout: false,
                 started: true,
-                active: true
+                active: true,
+                deadline: moment.utc().add(20, "seconds").toDate()
             }
-        })
+        });
+    },
+    
+    "stop"(gamePin) {
+        Game.update({ gamePin }, {
+            $set: {
+                timeout: true
+            }
+        });
+    },
+    
+    "next"(gamePin) {
+        console.log("Going next", gamePin);
+        
+        Player.update({ gamePin }, {
+            $unset: { answer: 1, timeleft: 1 }
+        });
+        
+        Game.update({ gamePin }, {
+            $set: {
+                timeout: false,
+                started: true,
+                active: true,
+                deadline: moment.utc().add(20, "seconds").toDate()
+            },
+            
+            $inc: {
+                current: 1
+            }
+        });
+    },
+    
+    "toScores"(gamePin) {
+        let game = Game.findOne({ gamePin });
+        let alternatives = game.questions[game.current].alternatives;
+        
+        _.each(alternatives, (alternative, i) => {
+            console.log(alternative, i);
+            if (alternative.correct) {
+                console.log("is correct!");
+                
+                Player.find({ gamePin, answer: i }).forEach((player) => {
+                    let points = (20 - Math.abs(player.timeleft)) * 10;
+                    let nickname = player.nickname;
+                    Player.update({ gamePin, nickname, answer: i }, {
+                        $inc: { points }
+                    });
+                });
+            }
+        });
+        
+        
+        Game.update({ gamePin }, {
+            $set: {
+                active: false,
+            },
+        });
     }
  });
