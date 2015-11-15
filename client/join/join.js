@@ -10,25 +10,24 @@ Template.join.helpers({
 
 Template.join.events({
     "click .join-game"(e, t) {
-        var pin =  t.$("input").val();
+        var gamePin =  t.$("input").val();
         
-        if (pin === "") {
-            t.error.set("Pin can't be empty!");
+        if (gamePin === "") {
+            t.error.set("gamePin can't be empty!");
             return;
         }
         
         Meteor.call("join", {
-            pin: pin,
-            nickname: Session.get("nickname")
+            gamePin: gamePin,
         }, (err, res) => {
             if (err) {
                 console.log(err);
                 t.error.set(err.reason);
                 return;
             }
-            
-            Session.set("game", res);
-            FlowRouter.go("/lobby");
+            console.log(err, res);
+            Session.set("gamePin", res);
+            FlowRouter.go("/nickname");
         });
     },
 });

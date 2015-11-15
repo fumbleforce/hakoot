@@ -1,3 +1,5 @@
+BlazeLayout.setRoot('body');
+
 Template.layout.onCreated(function () {
 
 });

@@ -1,1 +1,50 @@
 template(name="game")
+    if active
+        +activeGame
+    else if result
+        +result
+    else
+        +waiting
+        
+
+
+template(name="activeGame")
+    
+    if hasChosen
+        .vertical-wrapper
+            h1.ui.center.aligned.header.vertical-center(style="color:white!important")
+                | You chose #{answer}
+    else
+        .ui.two.column.grid
+            each addIndex alternatives
+                .column
+                    .ui.inverted.center.aligned.segment(choose=index class="{{alternativeClass index}}")=value
+
+
+
+template(name="result")
+    .vertical-wrapper
+        if correct
+            .ui.inverted.green.segment.vertical-center
+                h1.ui.center.aligned.header(style="color:white!important") Correct!
+        else
+            .ui.inverted.red.segment.vertical-center
+                h1.ui.center.aligned.header(style="color:white!important") Wrong!
+        
+
+
+template(name="waiting")
+    .ui.center.aligned.segment
+        | Game pin: {{session "gamePin"}}
+        
+    
+    .vertical-wrapper
+        h1.ui.center.aligned.header.vertical-center(style="color:white!important")
+            | You're in!
+            .sub.header(style="color:white!important")
+                | Did you see your name appear at the front?
+        
+    
+    
+    .ui.center.aligned.segment(style="position:fixed;bottom:0;width:100%;")
+        | {{session "nickname"}}

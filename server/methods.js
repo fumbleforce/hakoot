@@ -1,5 +1,5 @@
 Meteor.methods({
-    "nickname": function (opts) {
+    "nickname"(opts) {
         let nickname = opts.nickname;
         let gamePin = opts.gamePin;
         
@@ -10,14 +10,16 @@ Meteor.methods({
         }
         
         Player.insert({
-            nick,
+            nickname,
             gamePin,
             points: 0,
             answer: 0
         });
+        
+        return nickname;
     },
     
-    "join": function (opts) {
+    "join"(opts) {
         let gamePin = opts.gamePin;
         
         let exists = !!Game.find({ gamePin }).count();
@@ -29,7 +31,7 @@ Meteor.methods({
         return gamePin;
     },
     
-    "answer": function (opts) {
+    "answer"(opts) {
         let gamePin = opts.gamePin;
         let nickname = opts.nickname;
         let answer = +opts.answer;
@@ -42,5 +44,25 @@ Meteor.methods({
                 answer,
             }
         });
+    },
+    
+    "gamePinFromId"(id) {
+        console.log("Id:", id);
+        console.log("Game: ", Game.findOne(id));
+        let game = Game.findOne(id);
+        let pin = game.gamePin;
+        console.log("pin", game.gamePin, pin);
+        return pin;
+    },
+    
+    "start"(gamePin) {
+        console.log("Starting", gamePin);
+        
+        Game.update({ gamePin }, {
+            $set: {
+                started: true,
+                active: true
+            }
+        })
     }
  });

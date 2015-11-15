@@ -1,10 +1,10 @@
 Template.nickname.onCreated(function () {
-    this.errors = new ReactiveDict();
+    this.error = new ReactiveVar(false);
 });
 
 Template.nickname.helpers({
-    errors(err) {
-        return Template.instance().errors.get(err);
+    error() {
+        return Template.instance().error.get();
     }
 });
 
@@ -13,16 +13,17 @@ Template.nickname.events({
         var nickname =  t.$("input").val();
         
         Meteor.call("nickname", {
+            gamePin: Session.get("gamePin"),
             nickname,
         }, (err, res) => {
             if (err) {
                 console.log(err);
-                t.errors.set(err.error, err.reason);
+                t.error.set(err.reason);
                 return;
             }
             
-            Session.set("game", res);
-            FlowRouter.go("/join");
+            Session.set("nickname", res);
+            FlowRouter.go("/game");
         });
     },
 });

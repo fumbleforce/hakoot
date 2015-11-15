@@ -7,7 +7,6 @@ FlowRouter.route('/', {
         } else {
             FlowRouter.go("/join");
         }
-        console.log("Yeah! We are on the post:", params.postId);
     }
 });
 
@@ -36,9 +35,9 @@ FlowRouter.route("/join", {
 FlowRouter.route("/game", {
     action(params) {
         if (!Session.get("gamePin")) {
-            Router.go("/join");
+            FlowRouter.go("/join");
         } else if (!Session.get("nickname")) {
-            Router.go("/nickname");
+            FlowRouter.go("/nickname");
         } else {
             BlazeLayout.render("layout", { content: "game" });
         }
@@ -48,5 +47,11 @@ FlowRouter.route("/game", {
 FlowRouter.route("/create", {
     action(params) {
         BlazeLayout.render("layout", { content: "create" });
+    }
+});
+
+FlowRouter.route("/watch/:gamePin", {
+    action(params) {
+        BlazeLayout.render("layout", { content: "watch" });
     }
 });

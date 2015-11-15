@@ -1,6 +1,6 @@
 template(name="nickname")
     
-    .ui.container.nickname(style="max-width: 400px;padding-top:40%")
+    .ui.container.nickname
         
         .ui.center.aligned.header.logo
             | Hakoot!
@@ -10,3 +10,6 @@ template(name="nickname")
                 input(placeholder="Nickname")
             .field
                 button.ui.fluid.gray.button.go OK, go!
+    
+    .error-bar(class="{{#if error}}active{{/if}}")
+        | #{error}

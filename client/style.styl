@@ -11,17 +11,24 @@ body
     transition: background-color 3000ms linear
     font-size: 20px
 
+.ui.segment
+    color: rgba(0,0,0, 0.87);
+
 .join, .nickname
+    padding-top: 10em
+    
     .ui.form
         .field
 
             input
                 font-size: 3em !important
                 text-align: center !important
+                max-width: 300px
                 
             .button
                 font-size: 3em !important
                 text-align: center !important
+                max-width: 300px
 
 .create
     color: #fff !important
@@ -29,9 +36,18 @@ body
 
 .logo 
     font-family: "Neucha" !important
-    font-size: 12em !important
+    font-size: 90px !important
+    width: 255px;
     color: #fff !important
+    display:inline;
     
+
+.vertical-wrapper
+    min-height: 100vh;
+    transform: translateY(40%);
+    
+.vertical-center
+    transform: translateY(-50%);
 
 .error-bar
     bottom: -5em
