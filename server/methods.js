@@ -13,7 +13,6 @@ Meteor.methods({
             nickname,
             gamePin,
             points: 0,
-            answer: 0
         });
         
         return nickname;
@@ -63,7 +62,7 @@ Meteor.methods({
         
         Player.update({ gamePin }, {
             $unset: { answer: 1, timeleft: 1 }
-        });
+        }, { multi: true });
 
         Game.update({ gamePin }, {
             $set: {
