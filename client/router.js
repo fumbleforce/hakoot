@@ -2,11 +2,11 @@
 
 FlowRouter.route('/', {
     action(params, queryParams) {
-        if (Session.get("gamePin")) {
-            FlowRouter.go("/nickname");
-        } else {
-            FlowRouter.go("/join");
-        }
+        
+        Session.set("gamePin", false);
+        Session.set("nickname", false);
+        
+        FlowRouter.go("/join");
     }
 });
 

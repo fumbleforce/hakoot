@@ -26,4 +26,8 @@ Template.nickname.events({
             FlowRouter.go("/game");
         });
     },
+    
+    "click .error-bar"(e, t) {
+        t.error.set(false);
+    }
 });

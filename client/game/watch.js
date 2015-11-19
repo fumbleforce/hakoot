@@ -31,6 +31,7 @@ Template.question.onCreated(function () {
     this.countdown = new ReactiveCountdown(moment.utc(game.deadline).diff(moment.utc(), "seconds"));
     
     this.rendered = new ReactiveVar(false);
+    this.width = new ReactiveVar(0);
     
     this.countdown.start(function() {
         Meteor.call("stop", Session.get("gamePin"));
@@ -40,6 +41,8 @@ Template.question.onCreated(function () {
 
 Template.question.onRendered(function () {
     this.rendered.set(true);
+    console.log("WIDTH", $("#answers").width());
+    this.width.set($("#answers").width());
 });
 
 Template.question.helpers({
@@ -95,9 +98,11 @@ Template.question.helpers({
             "#21ba45"
         ][i];
         
-        console.log(i, ($("#answers").width() / 8),  ($("#answers").width() / 8) * i, (i+1) * ($("#answers").width() / 8));
+        let width = Template.instance().width.get();
         
-        let left = ($("#answers").width() / 8) * i + (i+1) * ($("#answers").width() / 8);
+        console.log(i, (width / 8),  (width / 8) * i, (i+1) * (width / 8));
+        
+        let left = (width / 8) * i + (i+1) * (width / 8);
         
         return `height: ${height}%; background-color: ${color}; left: ${left}px;`;
     },

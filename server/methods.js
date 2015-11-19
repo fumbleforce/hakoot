@@ -3,7 +3,7 @@ Meteor.methods({
         let nickname = opts.nickname;
         let gamePin = opts.gamePin;
         
-        let exists = !!Player.find({ nickname }).count();
+        let exists = !!Player.find({ nickname, gamePin }).count();
         
         if (exists) {
             throw new Meteor.Error("nickname_taken", "This nickname is taken!");

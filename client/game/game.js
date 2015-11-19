@@ -79,7 +79,7 @@ Template.activeGame.helpers({
             nickname: Session.get("nickname"),
             gamePin: Session.get("gamePin")
         });
-        if (player.answer == undefined) return false;
+        if (player && player.answer == undefined) return false;
         let alternatives = game.questions[game.current].alternatives;
         return alternatives[player.answer].correct;
     },

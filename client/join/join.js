@@ -30,4 +30,8 @@ Template.join.events({
             FlowRouter.go("/nickname");
         });
     },
+    
+    "click .error-bar"(e, t) {
+        t.error.set(false);
+    }
 });
