@@ -1,8 +1,15 @@
 Template.watch.onCreated(function () {
+    let template = this;
+    
     this.gamePin = FlowRouter.current().params.gamePin;
     Session.set("gamePin", this.gamePin);
     this.subscribe("game", this.gamePin);
     this.subscribe("players", this.gamePin);
+    
+    //var audio;
+    //audio = template.find('#audio');
+    //Session.set('musicDuration', audio.duration);
+    //audio.play();
 });
 
 Template.watch.helpers({

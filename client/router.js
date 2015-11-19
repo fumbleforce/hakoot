@@ -14,8 +14,6 @@ FlowRouter.route("/nickname", {
     action(params) {
         if (!Session.get("gamePin")) {
             FlowRouter.go("/join");
-        } else if (Session.get("nickname")) {
-            FlowRouter.go("/game");
         } else {
             BlazeLayout.render("layout", { content: "nickname" });
         }

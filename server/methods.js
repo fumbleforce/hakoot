@@ -37,7 +37,7 @@ Meteor.methods({
         let answer = +opts.answer;
         let game = Game.findOne({ gamePin });
         let timeleft = moment.utc(game.deadline).diff(moment.utc(), "seconds");
-        
+        console.log("Answering", answer, "with", timeleft, "left");
         Player.update({
             gamePin,
             nickname   
@@ -109,12 +109,12 @@ Meteor.methods({
         let alternatives = game.questions[game.current].alternatives;
         
         _.each(alternatives, (alternative, i) => {
-            console.log(alternative, i);
             if (alternative.correct) {
                 console.log("is correct!");
                 
                 Player.find({ gamePin, answer: i }).forEach((player) => {
-                    let points = (20 - Math.abs(player.timeleft)) * 10;
+                    let points = Math.abs(player.timeleft) * 10;
+                    console.log(player, "gets", points, "for", player.timeleft);
                     let nickname = player.nickname;
                     Player.update({ gamePin, nickname, answer: i }, {
                         $inc: { points }

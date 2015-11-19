@@ -1,5 +1,8 @@
 template(name="watch")
-    
+    audio
+    audio(id="audio" src="/waiting.mp3" autoplay loop)
+        | Your browser does not support the <code>audio</code> element.
+        
     if started
         if active
             +question
